@@ -33,7 +33,63 @@ This results in the following SVG being rendered:
 
 ![graph-square](./examples/square.png)
 
-More complicated examples can be found in the `examples` directory.
+Multiple lines can be passed, with optional smoothing effects. For example:
+
+```js
+import React from 'react';
+import { render } from 'react-dom';
+import { LineGraph } from 'smooth-line-graph';
+
+const props = {
+    name: 'multi',
+    width: 500,
+    height: 500,
+    padding: [40, 40, 100, 40],
+    lines: [
+        {
+            key: 'series1',
+            data: [
+                [0, 0],
+                [0.1, 0.4],
+                [1, -5],
+                [1.2, -6],
+                [1.3, -3.7],
+                [2.9, 9],
+                [4, 9.1],
+                [7.3, 8.7],
+                [8, 6.5],
+                [9, 5],
+                [4, 3]
+            ],
+            color: '#03c',
+            smooth: false
+        },
+        {
+            key: 'series2',
+            data: [
+                [-3, 4.2],
+                [-2, 7],
+                [0, 4.1],
+                [1, 9],
+                [0.5, 2],
+                [0.6, -1],
+                [8, 9],
+                [7.3, 5]
+            ],
+            color: '#c03',
+            smooth: true
+        }
+    ]
+};
+
+render(<LineGraph {...props} />, document.getElementById('root'));
+```
+
+results in the following:
+
+![graph-multi](./examples/multi.png)
+
+More examples can be found in the `examples` directory.
 
 ## Options
 
