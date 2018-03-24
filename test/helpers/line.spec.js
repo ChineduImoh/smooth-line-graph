@@ -43,7 +43,7 @@ describe('Line helper functions', () => {
     const linePathSimpleFilled = [
         ...linePathSimple,
         {
-            args: [500, 500],
+            args: [[500, 500]],
             start: [500, 380],
             type: 'L'
         }
@@ -84,6 +84,15 @@ describe('Line helper functions', () => {
             type: 'Q',
             start: [394.7, 20],
             args: [[437, 132], [500, 380]]
+        }
+    ];
+
+    const linePathSmoothFilled = [
+        ...linePathSmooth,
+        {
+            args: [[500, 500]],
+            start: [500, 380],
+            type: 'L'
         }
     ];
 
@@ -145,6 +154,14 @@ describe('Line helper functions', () => {
                     .to.deep.equal([
                         { start: [526.3, 280], args: [[552.6, 320]], type: 'L' }
                     ]);
+            });
+
+            it('should render a filled line', () => {
+                expect(line.getLinePath({
+                    ...propsSmooth,
+                    fill: true
+                }))
+                    .to.deep.equal(linePathSmoothFilled);
             });
         });
     });

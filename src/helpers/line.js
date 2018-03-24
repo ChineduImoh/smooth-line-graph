@@ -1,6 +1,6 @@
 import { getControlPoints } from './smoothing';
 
-export function getLinePath({ width, height, data, smooth, fill, pixX, pixY }) {
+export function getLinePath({ data, smooth, fill, pixX, pixY, maxX, minY }) {
     const getPixPoint = ([valX, valY]) => ([pixX(valX), pixY(valY)]);
 
     const pixelsNumeric = data.map(point => getPixPoint(point));
@@ -57,7 +57,7 @@ export function getLinePath({ width, height, data, smooth, fill, pixX, pixY }) {
         return line.concat({
             start: pixels[pixels.length - 1],
             type: 'L',
-            args: [width, height]
+            args: [[pixX(maxX), pixY(minY)]]
         });
     }
 

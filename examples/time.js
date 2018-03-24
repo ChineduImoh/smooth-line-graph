@@ -69,7 +69,7 @@ export function LineGraphTime() {
         padding: [20, 0, 20, 0],
         lines: [
             {
-                key: 'rwdata',
+                key: 'timedata1',
                 data: series,
                 smooth: true,
                 color: ([valX]) => {
@@ -79,6 +79,13 @@ export function LineGraphTime() {
 
                     return '#c06';
                 }
+            },
+            {
+                key: 'timedata2',
+                data: [[series[0][0], 0]].concat(series.map(([xVal, yVal]) => [xVal, yVal * 0.5])),
+                smooth: true,
+                fill: true,
+                color: 'rgba(60, 60, 60, 0.4)'
             }
         ]
     };
