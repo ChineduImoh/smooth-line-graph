@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as time from '../../lib/helpers/time';
+import * as time from '../../src/helpers/time';
 
 describe('Time functions', () => {
     describe('getTimeSeriesTicks', () => {

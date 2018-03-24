@@ -4,8 +4,8 @@ import Adapter from 'enzyme-adapter-react-16';
 import Enzyme, { shallow } from 'enzyme';
 Enzyme.configure({ adapter: new Adapter() });
 import React from 'react';
-import LineGraph from '../lib/LineGraph';
-import RenderedLine from '../lib/RenderedLine';
+import LineGraph from '../src/LineGraph';
+import RenderedLine from '../src/RenderedLine';
 
 describe('<LineGraph />', () => {
     const lines = [

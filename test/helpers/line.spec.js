@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as line from '../../lib/helpers/line';
+import * as line from '../../src/helpers/line';
 
 describe('Line helper functions', () => {
     const linePathSimple = [

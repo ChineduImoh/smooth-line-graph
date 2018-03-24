@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as smoothing from '../../lib/helpers/smoothing';
+import * as smoothing from '../../src/helpers/smoothing';
 
 describe('Smoothing functions', () => {
     describe('getControlPoints', () => {

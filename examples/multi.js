@@ -1,6 +1,6 @@
 import { renderToString } from 'react-dom/server';
 import React from 'react';
-import LineGraph from '../lib/LineGraph';
+import LineGraph from '../src/LineGraph';
 
 export function LineGraphMulti() {
     const series1 = [

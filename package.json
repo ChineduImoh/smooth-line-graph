@@ -4,7 +4,7 @@
   "description": "React component to draw a smooth, SVG-based line graph",
   "main": "index.js",
   "scripts": {
-    "build": "NODE_ENV=production babel lib --out-dir dist",
+    "build": "NODE_ENV=production babel src --out-dir dist",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --require babel-core/register \"test/**/*.spec.js\"",
     "lint": "NODE_ENV=test ./node_modules/.bin/eslint lib test"
   },
