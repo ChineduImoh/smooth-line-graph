@@ -154,3 +154,11 @@ You can find an example of a time series graph in `examples/time.js`, which rend
 
 ![graph-time](./examples/time.png)
 
+## Testing
+
+Tests are written using the `mocha` framework, and cover both unit tests and graph tests. The graph tests were written post-hoc - i.e. examples were written and then run, the results were verified visually, and then the tests were written to conform to these results.
+
+To run all tests, use:
+
+- `npm test`
+
