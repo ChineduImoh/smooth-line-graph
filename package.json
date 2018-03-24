@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "NODE_ENV=production babel src --out-dir dist",
+    "prepublish": "npm run build",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --require babel-core/register \"test/**/*.spec.js\"",
     "lint": "NODE_ENV=test ./node_modules/.bin/eslint lib test"
   },
