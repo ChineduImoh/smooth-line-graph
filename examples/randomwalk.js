@@ -3,26 +3,32 @@ import React from 'react';
 import { LineGraph } from '../src';
 import randomNumbers from './randomNumbers.json';
 
-const testableRandom = () => {
+const testableRandom = (bias = 0) => {
     if (process.env.NODE_ENV === 'test') {
         let index = 543;
 
         return () => randomNumbers[(index++) % randomNumbers.length];
     }
 
-    return () => 2 * Math.random() - 0.99;
+    return () => 2 * Math.random() - 1 + bias;
 };
 
 export function LineGraphRandomWalk() {
     const limit = 100;
-    const random = testableRandom(limit);
+    const bias = -0.01;
 
-    const series = new Array(limit).fill(0)
-        .reduce(last => ([
-            ...last,
-            last[last.length - 1] + random()
-        ]), [0])
-        .map((value, index) => ([index, value]));
+    const random = testableRandom(bias);
+
+    const series = new Array(limit);
+    let index = 0;
+    let value = 0;
+    while (index < limit) {
+        series[index] = [index, value];
+
+        value += random();
+
+        index++;
+    }
 
     const props = {
         name: 'graph-random-walk',
