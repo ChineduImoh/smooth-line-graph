@@ -45,6 +45,6 @@ function render() {
 if (require.main === module) {
     const output = render();
 
-    console.log(output);
+    process.stdout.write(output);
 }
 
