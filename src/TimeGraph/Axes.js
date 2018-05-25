@@ -3,11 +3,39 @@ import PropTypes from 'prop-types';
 import * as constants from '../constants';
 import { getTimeScale } from '../helpers/time';
 
-function calculateTicksY({ tickSizeY, minY, maxY, pixY }) {
+function getRoundTickSize(minimum, magnitude) {
+    const res = minimum / magnitude;
+
+    if (res > 5) {
+        return 10 * magnitude;
+    }
+
+    if (res > 2) {
+        return 5 * magnitude;
+    }
+
+    if (res > 1) {
+        return 2 * magnitude;
+    }
+
+    return magnitude;
+}
+
+function getRoundTick({ numTicks, min, max }) {
+    const minimum = (max - min) / numTicks;
+    const magnitude = 10 ** Math.floor(Math.log10(minimum));
+
+    const tickSize = getRoundTickSize(minimum, magnitude);
+
+    return {
+        tickSize,
+        numTicks: Math.floor((max - min) / tickSize)
+    };
+}
+
+function calculateTicksY({ numTicksY = 10, minY, maxY, pixY }) {
     // calculate tick range
-    const numTicks = typeof tickSizeY === 'undefined' || isNaN(tickSizeY)
-        ? 0
-        : Math.floor((maxY - minY) / tickSizeY);
+    const { tickSize, numTicks } = getRoundTick({ numTicks: numTicksY, min: minY, max: maxY });
 
     if (!numTicks) {
         return [];
@@ -16,7 +44,7 @@ function calculateTicksY({ tickSizeY, minY, maxY, pixY }) {
     return new Array(numTicks)
         .fill(0)
         .map((item, key) => {
-            const value = minY + (key + 1) * tickSizeY;
+            const value = minY + (key + 1) * tickSize;
             const pos = Math.floor(pixY(value)) + 0.5;
 
             return { value, pos };
