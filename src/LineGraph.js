@@ -20,6 +20,7 @@ const genPixelProps = props => {
         width,
         height,
         padding: [padTop, padRight, padBottom, padLeft],
+        log,
         lines
     } = props;
 
@@ -36,15 +37,34 @@ const genPixelProps = props => {
     const maxY = coalesce(props.maxY,
         pointReducer((last, [, valY]) => Math.max(last, valY), -Infinity));
 
+    const minYLog = Math.log(Math.max(1, minY));
+    const maxYLog = Math.log(Math.max(1, maxY));
+
+    const withLog = handler => {
+        if (log) {
+            return value => handler(Math.log(Math.max(1, value)), minYLog, maxYLog);
+        }
+
+        return value => handler(value, minY, maxY);
+    };
+
+    const withLogInverse = handler => {
+        if (log) {
+            return value => Math.E ** handler(value, minYLog, maxYLog);
+        }
+
+        return value => handler(value, minY, maxY);
+    };
+
     return {
         pixX: value =>
             padLeft + (value - minX) / (maxX - minX) * (width - padLeft - padRight),
-        pixY: value =>
-            height - padBottom - (value - minY) / (maxY - minY) * (height - padTop - padBottom),
+        pixY: withLog((value, y0, y1) =>
+            height - padBottom - (value - y0) / (y1 - y0) * (height - padTop - padBottom)),
         valX: pix =>
             (pix - padLeft) * (maxX - minX) / (width - padLeft - padRight) + minX,
-        valY: pix =>
-            (height - padBottom - pix) * (maxY - minY) / (height - padTop - padBottom) + minY,
+        valY: withLogInverse((pix, y0, y1) =>
+            (height - padBottom - pix) * (y1 - y0) / (height - padTop - padBottom) + y0),
 
         minX,
         maxX,
@@ -119,6 +139,7 @@ LineGraph.propTypes = {
     name: PropTypes.string.isRequired,
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
+    log: PropTypes.bool,
     lines: PropTypes.arrayOf(PropTypes.shape({
         key: PropTypes.any.isRequired,
         data: PropTypes.array.isRequired,
