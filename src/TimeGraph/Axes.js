@@ -33,8 +33,25 @@ function getRoundTick({ numTicks, min, max }) {
     };
 }
 
-function calculateTicksY({ numTicksY = 10, minY, maxY, pixY }) {
+function calculateTicksY({ numTicksY = 10, log, minY, maxY, pixY }) {
     // calculate tick range
+    if (log) {
+        const startExp = Math.floor(Math.log10(Math.max(1, minY)));
+        const endExp = Math.ceil(Math.log10(Math.max(1, maxY)));
+
+        if (startExp > endExp) {
+            return [];
+        }
+
+        return new Array(endExp + 1 - startExp).fill(0)
+            .map((item, key) => {
+                const value = 10 ** (startExp + key);
+                const pos = Math.floor(pixY(value)) + 0.5;
+
+                return { value, pos };
+            });
+    }
+
     const { tickSize, numTicks } = getRoundTick({ numTicks: numTicksY, min: minY, max: maxY });
 
     if (!numTicks) {

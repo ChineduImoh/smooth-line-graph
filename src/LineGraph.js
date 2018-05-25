@@ -34,15 +34,19 @@ const genPixelProps = props => {
 
     const minY = coalesce(props.minY,
         pointReducer((last, [, valY]) => Math.min(last, valY), Infinity));
-    const maxY = coalesce(props.maxY,
+    let maxY = coalesce(props.maxY,
         pointReducer((last, [, valY]) => Math.max(last, valY), -Infinity));
 
-    const minYLog = Math.log(Math.max(1, minY));
+    if (log) {
+        maxY = Math.E ** Math.ceil(Math.log(maxY));
+    }
+
+    const minYLog = Math.log(Math.max(0.1, minY));
     const maxYLog = Math.log(Math.max(1, maxY));
 
     const withLog = handler => {
         if (log) {
-            return value => handler(Math.log(Math.max(1, value)), minYLog, maxYLog);
+            return value => handler(Math.log(Math.max(0.1, value)), minYLog, maxYLog);
         }
 
         return value => handler(value, minY, maxY);
