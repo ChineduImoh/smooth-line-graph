@@ -14,7 +14,7 @@ const testableRandom = (bias = 0) => {
 };
 
 export function LineGraphRandomWalk() {
-    const limit = 100;
+    const limit = 101;
     const bias = -0.01;
 
     const random = testableRandom(bias);
