@@ -76,36 +76,36 @@ describe('Time functions', () => {
             expect(result).to.deep.equal(expectedResult);
         });
         it('should handle ranges of between 0.6 days and eight days', () => {
-            const result = time.timeSeriesTicks(1497871283, 1497871283 + 86400 * 3.32);
+            const result = time.timeSeriesTicks(1497871283, 1497871283 + 86400 * 3.32, { width: 500 });
 
             const expectedResult = [
-                { label: false, major: 0, time: 1497870000 },
-                { label: false, major: 0, time: 1497880800 },
-                { label: false, major: 0, time: 1497891600 },
-                { label: false, major: 0, time: 1497902400 },
-                { label: 'Tue', major: 1, time: 1497913200 },
-                { label: false, major: 0, time: 1497924000 },
-                { label: false, major: 0, time: 1497934800 },
-                { label: false, major: 0, time: 1497945600 },
-                { label: false, major: 0, time: 1497956400 },
-                { label: false, major: 0, time: 1497967200 },
-                { label: false, major: 0, time: 1497978000 },
-                { label: false, major: 0, time: 1497988800 },
-                { label: 'Wed', major: 1, time: 1497999600 },
-                { label: false, major: 0, time: 1498010400 },
-                { label: false, major: 0, time: 1498021200 },
-                { label: false, major: 0, time: 1498032000 },
-                { label: false, major: 0, time: 1498042800 },
-                { label: false, major: 0, time: 1498053600 },
-                { label: false, major: 0, time: 1498064400 },
-                { label: false, major: 0, time: 1498075200 },
-                { label: 'Thu', major: 1, time: 1498086000 },
-                { label: false, major: 0, time: 1498096800 },
-                { label: false, major: 0, time: 1498107600 },
-                { label: false, major: 0, time: 1498118400 },
-                { label: false, major: 0, time: 1498129200 },
-                { label: false, major: 0, time: 1498140000 },
-                { label: false, major: 0, time: 1498150800 }
+                { time: 1497870000, major: 0, label: '12' },
+                { time: 1497880800, major: 0, label: '15' },
+                { time: 1497891600, major: 0, label: '18' },
+                { time: 1497902400, major: 0, label: '21' },
+                { time: 1497913200, major: 1, label: 'Tue' },
+                { time: 1497924000, major: 0, label: '3' },
+                { time: 1497934800, major: 0, label: '6' },
+                { time: 1497945600, major: 0, label: '9' },
+                { time: 1497956400, major: 0, label: '12' },
+                { time: 1497967200, major: 0, label: '15' },
+                { time: 1497978000, major: 0, label: '18' },
+                { time: 1497988800, major: 0, label: '21' },
+                { time: 1497999600, major: 1, label: 'Wed' },
+                { time: 1498010400, major: 0, label: '3' },
+                { time: 1498021200, major: 0, label: '6' },
+                { time: 1498032000, major: 0, label: '9' },
+                { time: 1498042800, major: 0, label: '12' },
+                { time: 1498053600, major: 0, label: '15' },
+                { time: 1498064400, major: 0, label: '18' },
+                { time: 1498075200, major: 0, label: '21' },
+                { time: 1498086000, major: 1, label: 'Thu' },
+                { time: 1498096800, major: 0, label: '3' },
+                { time: 1498107600, major: 0, label: '6' },
+                { time: 1498118400, major: 0, label: '9' },
+                { time: 1498129200, major: 0, label: '12' },
+                { time: 1498140000, major: 0, label: '15' },
+                { time: 1498150800, major: 0, label: '18' }
             ];
 
             expect(result).to.deep.equal(expectedResult);
@@ -114,18 +114,18 @@ describe('Time functions', () => {
             const result = time.timeSeriesTicks(1497871283, 1497871283 + 86400 * 11.4);
 
             const expectedResult = [
-                { label: false, major: 0, time: 1497826800 },
-                { label: false, major: 0, time: 1497913200 },
-                { label: false, major: 0, time: 1497999600 },
-                { label: false, major: 0, time: 1498086000 },
-                { label: false, major: 0, time: 1498172400 },
-                { label: false, major: 0, time: 1498258800 },
-                { label: '25 Jun', major: 1, time: 1498345200 },
-                { label: false, major: 0, time: 1498431600 },
-                { label: false, major: 0, time: 1498518000 },
-                { label: false, major: 0, time: 1498604400 },
-                { label: false, major: 0, time: 1498690800 },
-                { label: false, major: 0, time: 1498777200 }
+                { time: 1497826800, major: 0, label: 'M' },
+                { time: 1497913200, major: 0, label: 'T' },
+                { time: 1497999600, major: 0, label: 'W' },
+                { time: 1498086000, major: 0, label: 'T' },
+                { time: 1498172400, major: 0, label: 'F' },
+                { time: 1498258800, major: 0, label: 'S' },
+                { time: 1498345200, major: 1, label: '25 Jun' },
+                { time: 1498431600, major: 0, label: 'M' },
+                { time: 1498518000, major: 0, label: 'T' },
+                { time: 1498604400, major: 0, label: 'W' },
+                { time: 1498690800, major: 0, label: 'T' },
+                { time: 1498777200, major: 0, label: 'F' }
             ];
 
             expect(result).to.deep.equal(expectedResult);
@@ -134,16 +134,16 @@ describe('Time functions', () => {
             const result = time.timeSeriesTicks(1497871283, 1497871283 + 86400 * 35 * 1.5);
 
             const expectedResult = [
-                { label: false, major: 0, time: 1497826800 },
-                { label: false, major: 0, time: 1498431600 },
-                { label: 'Jul', major: 2, time: 1498863601 },
-                { label: false, major: 0, time: 1499036400 },
-                { label: false, major: 0, time: 1499641200 },
-                { label: false, major: 0, time: 1500246000 },
-                { label: false, major: 0, time: 1500850800 },
-                { label: false, major: 0, time: 1501455600 },
-                { label: 'Aug', major: 2, time: 1501542001 },
-                { label: false, major: 0, time: 1502060400 }
+                { time: 1497826800, major: 0, label: '19 Jun' },
+                { time: 1498431600, major: 0, label: '26 Jun' },
+                { time: 1498863601, major: 2, label: 'Jul' },
+                { time: 1499036400, major: 0, label: '3 Jul' },
+                { time: 1499641200, major: 0, label: '10 Jul' },
+                { time: 1500246000, major: 0, label: '17 Jul' },
+                { time: 1500850800, major: 0, label: '24 Jul' },
+                { time: 1501455600, major: 0, label: '31 Jul' },
+                { time: 1501542001, major: 2, label: 'Aug' },
+                { time: 1502060400, major: 0, label: '7 Aug' }
             ];
 
             expect(result).to.deep.equal(expectedResult);

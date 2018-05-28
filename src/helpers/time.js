@@ -14,7 +14,7 @@ function timeTick(t0, t1, { start, measure, tickSize, numTicks, getMajor, label,
             const tickTime = getTickTime(index);
             const major = getMajor(tickTime);
 
-            const mainTick = { time: tickTime.ts / 1000, major, label: major > 0 && label(tickTime) };
+            const mainTick = { time: tickTime.ts / 1000, major, label: label(tickTime, major) };
 
             if (extra) {
                 const extraTick = extra(tickTime);
@@ -39,7 +39,10 @@ function timeTickMonthYear(t0, t1) {
         tickSize: (start, index) => start.plus({ months: index }),
         getMajor: time => (((time.month - 1) % 6 === 0) >> 0) + (((time.month - 1) % 12 === 0) >> 0),
         numTicks,
-        label: time => {
+        label: (time, major) => {
+            if (!major) {
+                return false;
+            }
             if (time.month === 7) {
                 return 'H2';
             }
@@ -53,9 +56,15 @@ function timeTickWeekMonth(t0, t1) {
         measure: 'week',
         tickSize: 86400 * 7,
         getMajor: () => 0,
-        label: () => false,
+        label: time => {
+            if (time.date === 1) {
+                return false;
+            }
+
+            return time.toFormat('d LLL');
+        },
         extra: time => {
-            if (time.plus({ weeks: 1 }).hasSame(time, 'month')) {
+            if (time.plus({ days: 7 }).hasSame(time, 'month')) {
                 return null;
             }
 
@@ -71,12 +80,26 @@ function timeTickDayWeek(t0, t1) {
         measure: 'day',
         tickSize: 86400,
         getMajor: time => (time.weekday === 7) >> 0,
-        label: time => time.toFormat('d LLL')
+        label: (time, major) => {
+            if (!major) {
+                return time.toFormat('ccccc');
+            }
+
+            return time.toFormat('d LLL');
+        }
     });
 }
-function timeTickHourDay(t0, t1) {
+function timeTickHourDay(t0, t1, { width }) {
     const startTime = DateTime.fromJSDate(new Date(t0 * 1000));
     const hourOffset = startTime.hour % 3;
+    const pixelsPerDay = width / (t1 - t0) * 86400;
+    let hourTick = null;
+    if (pixelsPerDay > 150) {
+        hourTick = 3;
+    }
+    else if (pixelsPerDay > 50) {
+        hourTick = 6;
+    }
 
     const start = startTime.startOf('hour').plus({ hours: -hourOffset });
 
@@ -84,7 +107,16 @@ function timeTickHourDay(t0, t1) {
         start,
         tickSize: 3600 * 3,
         getMajor: time => (time.hour === 0) >> 0,
-        label: time => time.toFormat('ccc')
+        label: (time, major) => {
+            if (major) {
+                return time.toFormat('ccc');
+            }
+            if (hourTick && time.hour % hourTick === 0) {
+                return time.toFormat('H');
+            }
+
+            return false;
+        }
     });
 }
 function timeTickMinuteHour(t0, t1) {
@@ -92,7 +124,10 @@ function timeTickMinuteHour(t0, t1) {
         measure: 'hour',
         tickSize: 1800,
         getMajor: time => ((time.minute === 0) >> 0) + ((time.hour === 0 && time.minute === 0) >> 0),
-        label: time => {
+        label: (time, major) => {
+            if (!major) {
+                return false;
+            }
             if (time.hour === 0) {
                 return time.toFormat('ccc');
             }
@@ -106,7 +141,13 @@ function timeTickSecondMinute2(t0, t1) {
         measure: 'minute',
         tickSize: 60,
         getMajor: time => (time.minute % 10 === 0) >> 0,
-        label: time => time.toLocaleString(DateTime.TIME_24_SIMPLE)
+        label: (time, major) => {
+            if (!major) {
+                return false;
+            }
+
+            return time.toLocaleString(DateTime.TIME_24_SIMPLE);
+        }
     });
 }
 function timeTickSecondMinute(t0, t1) {
@@ -114,38 +155,46 @@ function timeTickSecondMinute(t0, t1) {
         measure: 'minute',
         tickSize: 30,
         getMajor: time => (time.second === 0) >> 0,
-        label: time => time.toLocaleString(DateTime.TIME_24_SIMPLE)
+        label: (time, major) => {
+            if (!major) {
+                return false;
+            }
+
+            return time.toLocaleString(DateTime.TIME_24_SIMPLE);
+        }
     });
 }
 
-export function timeSeriesTicks(t0, t1) {
+export function timeSeriesTicks(t0, t1, options) {
     const range = t1 - t0;
 
     if (range < 600) {
-        return timeTickSecondMinute(t0, t1);
+        return timeTickSecondMinute(t0, t1, options);
     }
     if (range < 3600) {
-        return timeTickSecondMinute2(t0, t1);
+        return timeTickSecondMinute2(t0, t1, options);
     }
     if (range < 86400 * 0.6) {
-        return timeTickMinuteHour(t0, t1);
+        return timeTickMinuteHour(t0, t1, options);
     }
     if (range < 86400 * 8) {
-        return timeTickHourDay(t0, t1);
+        return timeTickHourDay(t0, t1, options);
     }
     if (range < 86400 * 35) {
-        return timeTickDayWeek(t0, t1);
+        return timeTickDayWeek(t0, t1, options);
     }
     if (range < 86400 * 35 * 12) {
-        return timeTickWeekMonth(t0, t1);
+        return timeTickWeekMonth(t0, t1, options);
     }
 
-    return timeTickMonthYear(t0, t1);
+    return timeTickMonthYear(t0, t1, options);
 }
 
-export const getTimeScale = ({ minX, maxX, pixX }) => offset => {
+export const getTimeScale = ({ minX, maxX, width, pixX }) => offset => {
+    const options = { width };
+
     // divides the time axis (horizontal) into appropriate chunks
-    const ticks = timeSeriesTicks(offset + minX, offset + maxX);
+    const ticks = timeSeriesTicks(offset + minX, offset + maxX, options);
 
     if (ticks) {
         return ticks.map(({ major, time, label }) => ({

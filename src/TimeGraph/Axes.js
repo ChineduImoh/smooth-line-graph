@@ -119,10 +119,19 @@ export default function Axes(props) {
                 stroke={axisColor} strokeWidth={1} />
         ));
 
+    const timeTickFontSize = major => {
+        if (major) {
+            return fontSize;
+        }
+
+        return fontSize - 3;
+    };
+
     const timeTicksText = timeTicks.filter(({ text }) => text)
         .map(({ text, pix, major }) => (
             <text key={pix} x={pix} y={y0 - getTickSize(major)}
-                fontFamily={fontFamily} fontSize={fontSize} alignmentBaseline="baseline"
+                fontFamily={fontFamily} fontSize={timeTickFontSize(major)}
+                alignmentBaseline="baseline"
                 transform={transformText(pix, y0 - getTickSize(major))}
             >{text}</text>
         ));
