@@ -37,6 +37,8 @@ function getRoundTick({ numTicks, min, max }) {
 function calculateTicksY({ numTicksY = 10, log, minY, maxY, pixY }) {
     // calculate tick range
     if (log) {
+        const pixPos = value => Math.floor(pixY(value)) + 0.5;
+
         const startExp = Math.floor(Math.log10(Math.max(constants.MIN_LOG_VALUE, minY)));
         const endExp = Math.ceil(Math.log10(Math.max(1, maxY)));
 
@@ -45,12 +47,18 @@ function calculateTicksY({ numTicksY = 10, log, minY, maxY, pixY }) {
         }
 
         return new Array(endExp + 1 - startExp).fill(0)
-            .map((item, key) => {
-                const value = 10 ** (startExp + key);
-                const pos = Math.floor(pixY(value)) + 0.5;
+            .reduce((items, item, index) => {
+                const value = 10 ** (startExp + index);
+                const value2 = 2 * value;
+                const value5 = 5 * value;
 
-                return { value, pos };
-            });
+                return items.concat([
+                    { value, pos: pixPos(value), major: 1 },
+                    { value: value2, pos: pixPos(value2), major: 0 },
+                    { value: value5, pos: pixPos(value5), major: 0 }
+                ]);
+
+            }, []);
     }
 
     const { tickSize, numTicks } = getRoundTick({ numTicks: numTicksY, min: minY, max: maxY });
@@ -138,6 +146,46 @@ TimeAxis.propTypes = {
     fontSize: PropTypes.number.isRequired
 };
 
+function TickY({
+    pos, value, major, log, axisColor, textColor, fontSize, fontFamily, formatValue, pixX, minX, maxX
+}) {
+    const lineColor = major
+        ? axisColor
+        : '#ccc';
+
+    let text = null;
+    if (major > 0) {
+        text = (
+            <text x={pixX(maxX)} y={pos - 2} color={textColor}
+                fontSize={fontSize} fontFamily={fontFamily}
+                alignmentBaseline="baseline" textAnchor="end">{formatValue(value, log)}</text>
+        );
+    }
+
+    return (
+        <g key={value}>
+            <line x1={pixX(minX)} y1={pos} x2={pixX(maxX)} y2={pos}
+                stroke={lineColor} strokeWidth={1} />
+            {text}
+        </g>
+    );
+}
+
+TickY.propTypes = {
+    pos: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+    major: PropTypes.number,
+    log: PropTypes.bool,
+    axisColor: PropTypes.string.isRequired,
+    textColor: PropTypes.string.isRequired,
+    fontFamily: PropTypes.string.isRequired,
+    fontSize: PropTypes.number.isRequired,
+    formatValue: PropTypes.func.isRequired,
+    pixX: PropTypes.func.isRequired,
+    minX: PropTypes.number.isRequired,
+    maxX: PropTypes.number.isRequired
+};
+
 export default function Axes(props) {
     const graphProps = {
         axisColor: constants.DEFAULT_AXIS_COLOR,
@@ -148,25 +196,13 @@ export default function Axes(props) {
         ...props
     };
 
-    const { axisColor, textColor, fontSize, fontFamily, formatValue } = graphProps;
-
-    const { startTime, log, minX, maxX, pixX } = props;
-
-    const xMax = pixX(maxX);
-
-    const ticksY = calculateTicksY(props).map(({ pos, value }) => (
-        <g key={value}>
-            <line x1={pixX(minX)} y1={pos} x2={pixX(maxX)} y2={pos}
-                stroke={axisColor} strokeWidth={1} />
-            <text x={xMax} y={pos - 2} color={textColor}
-                fontSize={fontSize} fontFamily={fontFamily}
-                alignmentBaseline="baseline" textAnchor="end">{formatValue(value, log)}</text>
-        </g>
+    const ticksY = calculateTicksY(props).map(tick => (
+        <TickY key={tick.value} {...tick} {...graphProps} />
     ));
 
     let ticksX = null;
 
-    if (typeof startTime !== 'undefined') {
+    if (typeof props.startTime !== 'undefined') {
         ticksX = (<TimeAxis {...graphProps} />);
     }
 
