@@ -8,6 +8,7 @@ import { LineGraphRandomWalk } from '../examples/randomwalk';
 import { LineGraphSmooth } from '../examples/smooth';
 import { LineGraphStraight } from '../examples/straight';
 import { LineGraphTime } from '../examples/time';
+import { LineGraphLog } from '../examples/log';
 
 import './style.scss';
 
@@ -58,6 +59,7 @@ export default function App() {
             <GraphExample Graph={LineGraphSmooth} title="Smooth" />
             <GraphExample Graph={LineGraphStraight} title="Straight" />
             <GraphExample Graph={LineGraphTime} title="Time series" />
+            <GraphExample Graph={LineGraphLog} title="Log scale" />
         </div>
     );
 }
