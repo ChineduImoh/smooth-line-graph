@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import { LineGraphArrows } from '../examples/arrows';
 import { LineGraphMulti } from '../examples/multi';
@@ -10,23 +11,37 @@ import { LineGraphTime } from '../examples/time';
 
 import './style.scss';
 
-function GraphExample({ Graph, title }) {
-    const titleShort = title.toLowerCase()
-        .replace(/\s+/g, '-');
+class GraphExample extends Component {
+    constructor(props) {
+        super(props);
 
-    const titleWithPrefix = `Graph example: ${title}`;
+        this.state = { active: false };
+    }
+    render() {
+        const { Graph, title } = this.props;
 
-    const className = `graph-example graph-example-${titleShort}`;
+        const titleShort = title.toLowerCase()
+            .replace(/\s+/g, '-');
 
-    return (
-        <div className={className}>
-            <h2 className="title">{titleWithPrefix}</h2>
-            <div className="graph">
-                <h2 className="hover-title">{titleWithPrefix}</h2>
-                <Graph />
+        const titleWithPrefix = `Graph example: ${title}`;
+
+        const className = classNames('graph-example', `graph-example-${titleShort}`, {
+            active: this.state.active
+        });
+
+        const onToggleActive = () => this.setState({ active: !this.state.active });
+
+        return (
+            <div className={className} onClick={onToggleActive}>
+                <div className="inner">
+                    <h2 className="title">{titleWithPrefix}</h2>
+                    <div className="graph">
+                        <Graph />
+                    </div>
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
 }
 
 GraphExample.propTypes = {

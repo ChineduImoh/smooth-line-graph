@@ -7,17 +7,21 @@ body {
     flex-flow: row wrap;
     font: 1em sans-serif;
     
-    position: relative;
-
     .graph-example {
         display: flex;
-        flex-flow: column;
-        align-items: center;
-        width: 250px;
-        height: 300px;
+
+        .inner {
+            display: flex;
+            flex-flow: column;
+            align-items: center;
+            width: 250px;
+            height: 300px;
+            background: white;
+            border-right: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+        }
+
         z-index: 2;
-        border-right: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
 
         .title {
             margin: 0;
@@ -27,27 +31,30 @@ body {
         .graph {
             display: flex;
             align-items: center;
-            background: white;
-        }
-
-        &:not(:hover) {
-            .graph {
-                width: 100%;
-                height: 100%;
+            width: 100%;
+            height: 100%;
                 
-                .hover-title {
-                    display: none;
-                }
-                .graph-container {
-                    transform: scale(0.5);
-                    margin-left: -50%;
-                }
+            .hover-title {
+                display: none;
             }
         }
-        &:hover {
-            z-index: 3;
 
-            .graph {
+        &:not(.active) {
+            .graph-container {
+                transform: scale(0.5);
+                margin-left: -50%;
+            }
+        }
+        &.active {
+            z-index: 3;
+            position: absolute;
+            background: rgba(0, 0, 0, 0.4);
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+
+            .inner {
                 position: absolute;
                 left: 50%;
                 top: 50%;
@@ -56,13 +63,12 @@ body {
                 width: 500px;
                 height: 500px;
                 box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
+            }
+
+            .graph {
+                position: relative;
 
                 .hover-title {
-                    position: absolute;
-                    right: 0.5em;
-                    bottom: 0.2em;
-                    text-align: right;
-                    font-size: 16px;
                 }
             }
         }
