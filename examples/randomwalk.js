@@ -1,6 +1,6 @@
 import { renderToString } from 'react-dom/server';
 import React from 'react';
-import { LineGraph } from '../src';
+import LineGraph from '../src';
 import randomNumbers from './randomNumbers.json';
 
 const testableRandom = (bias = 0) => {

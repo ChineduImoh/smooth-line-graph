@@ -4,14 +4,14 @@ A React library for rendering line graphs, based on SVG.
 
 ## Usage
 
-Two React components are exported from this module: `LineGraph` and `TimeGraph`.
+This module consists of a React component, which is the default export.
 
 A basic dot-to-dot graph can be achieved as follows:
 
 ```js
 import React from 'react';
 import { render } from 'react-dom';
-import { LineGraph } from 'smooth-line-graph';
+import LineGraph from 'smooth-line-graph';
 
 const props = {
     name: 'simple',
@@ -38,7 +38,7 @@ Multiple lines can be passed, with optional smoothing effects. For example:
 ```js
 import React from 'react';
 import { render } from 'react-dom';
-import { LineGraph } from 'smooth-line-graph';
+import LineGraph from 'smooth-line-graph';
 
 const props = {
     name: 'multi',
@@ -126,7 +126,7 @@ Also note that all of the above `props`, plus the following additional ones, are
 
 ### Line options
 
-The `lines` prop passed to `<LineGraph />` or `<TimeGraph />` should be an array of objects, defining each line. The following list of options can be used as properties on each line object:
+The `lines` prop passed to `<LineGraph />` should be an array of objects, defining each line. The following list of options can be used as properties on each line object:
 
 - (**required**) `key`: a unique key to identify this line
 - (**required**) `data`: an array of points (which are two-length arrays like [xValue, yValue])
@@ -146,7 +146,7 @@ The `lines` prop passed to `<LineGraph />` or `<TimeGraph />` should be an array
 
 ### Time graph
 
-Using the `<TimeGraph />` component with the same props as with `<LineGraph />` plus an additional `startTime` prop, will render a time series with a horizontal time axis.
+Including an additional `startTime` prop, will render a time series with a horizontal time axis.
 
 Note that `startTime` and all the X-series values for the lines should be UNIX timestamps (i.e. the number of seconds since the UNIX epoch).
 

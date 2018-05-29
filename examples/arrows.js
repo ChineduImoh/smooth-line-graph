@@ -1,6 +1,6 @@
 import { renderToString } from 'react-dom/server';
 import React from 'react';
-import { TimeGraph } from '../src';
+import LineGraph from '../src';
 
 export function LineGraphArrows() {
     const series = [
@@ -34,7 +34,7 @@ export function LineGraphArrows() {
     };
 
     return (
-        <TimeGraph {...props} />
+        <LineGraph {...props} />
     );
 }
 
