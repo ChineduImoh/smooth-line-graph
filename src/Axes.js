@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as constants from './constants';
 import { getTimeScale } from './helpers/time';
+import { defaultFormatValue } from './helpers/format';
 
 function getRoundTickSize(minimum, magnitude) {
     const res = minimum / magnitude;
@@ -36,7 +37,7 @@ function getRoundTick({ numTicks, min, max }) {
 function calculateTicksY({ numTicksY = 10, log, minY, maxY, pixY }) {
     // calculate tick range
     if (log) {
-        const startExp = Math.floor(Math.log10(Math.max(1, minY)));
+        const startExp = Math.floor(Math.log10(Math.max(constants.MIN_LOG_VALUE, minY)));
         const endExp = Math.ceil(Math.log10(Math.max(1, maxY)));
 
         if (startExp > endExp) {
@@ -68,10 +69,10 @@ function calculateTicksY({ numTicksY = 10, log, minY, maxY, pixY }) {
         });
 }
 
-    const tickColors = [
-        constants.DEFAULT_TICK_COLOR_MINOR,
-        constants.DEFAULT_TICK_COLOR_MAJOR
-    ];
+const tickColors = [
+    constants.DEFAULT_TICK_COLOR_MINOR,
+    constants.DEFAULT_TICK_COLOR_MAJOR
+];
 
 function TimeAxis(props) {
     const { startTime, minY, maxY, pixY, axisColor, fontFamily, fontSize } = props;
@@ -143,13 +144,13 @@ export default function Axes(props) {
         textColor: constants.DEFAULT_TEXT_COLOR,
         fontSize: constants.DEFAULT_FONT_SIZE,
         fontFamily: constants.DEFAULT_FONT_FAMILY,
-        formatValue: constants.defaultFormatValue,
+        formatValue: defaultFormatValue,
         ...props
     };
 
     const { axisColor, textColor, fontSize, fontFamily, formatValue } = graphProps;
 
-    const { startTime, minX, maxX, pixX } = props;
+    const { startTime, log, minX, maxX, pixX } = props;
 
     const xMax = pixX(maxX);
 
@@ -159,7 +160,7 @@ export default function Axes(props) {
                 stroke={axisColor} strokeWidth={1} />
             <text x={xMax} y={pos - 2} color={textColor}
                 fontSize={fontSize} fontFamily={fontFamily}
-                alignmentBaseline="baseline" textAnchor="end">{formatValue(value)}</text>
+                alignmentBaseline="baseline" textAnchor="end">{formatValue(value, log)}</text>
         </g>
     ));
 
@@ -179,6 +180,7 @@ export default function Axes(props) {
 
 Axes.propTypes = {
     startTime: PropTypes.number,
+    log: PropTypes.bool,
     tickSizeY: PropTypes.number,
     minY: PropTypes.number.isRequired,
     maxY: PropTypes.number.isRequired,

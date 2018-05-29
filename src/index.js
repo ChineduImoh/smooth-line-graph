@@ -5,6 +5,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { MIN_LOG_VALUE } from './constants';
 import RenderedLine from './RenderedLine';
 import Axes from './Axes.js';
 
@@ -42,12 +43,12 @@ const genPixelProps = props => {
         maxY = Math.E ** Math.ceil(Math.log(maxY));
     }
 
-    const minYLog = Math.log(Math.max(0.1, minY));
+    const minYLog = Math.log(Math.max(MIN_LOG_VALUE, minY));
     const maxYLog = Math.log(Math.max(1, maxY));
 
     const withLog = handler => {
         if (log) {
-            return value => handler(Math.log(Math.max(0.1, value)), minYLog, maxYLog);
+            return value => handler(Math.log(Math.max(MIN_LOG_VALUE, value)), minYLog, maxYLog);
         }
 
         return value => handler(value, minY, maxY);

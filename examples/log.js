@@ -7,7 +7,7 @@ export function LineGraphLog() {
         [0, 0.0001],
         [1, 0.0002],
         [2, 0.0003],
-        [3, 0.0056],
+        [3, 0.0000056],
         [4, 1938129],
         [5, 867],
         [6, 19],
@@ -20,7 +20,8 @@ export function LineGraphLog() {
     const props = {
         name: 'graph-log',
         width: 500,
-        height: 300,
+        height: 500,
+        padding: [40, 0, 40, 0],
         log: true,
         lines: [
             {
