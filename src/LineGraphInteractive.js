@@ -10,6 +10,10 @@ export default class LineGraphInteractive extends PureComponent {
         width: PropTypes.number.isRequired,
         height: PropTypes.number.isRequired,
         padding: PropTypes.array.isRequired,
+        minX: PropTypes.number,
+        maxX: PropTypes.number,
+        minY: PropTypes.number,
+        maxY: PropTypes.number,
         lines: PropTypes.array.isRequired,
         log: PropTypes.bool,
         outerProperties: PropTypes.object
@@ -68,15 +72,22 @@ export default class LineGraphInteractive extends PureComponent {
     getOnMouseLeave() {
         return () => () => this.onHover(null);
     }
-    calculateState() {
+    getPixelProps() {
+        return genPixelProps({
+            padding: this.props.padding,
+            width: this.props.width,
+            height: this.props.height,
+            lines: this.props.lines,
+            log: this.props.log,
+            minY: this.props.minY,
+            maxY: this.props.maxY,
+            minX: this.props.minX,
+            maxX: this.props.maxX
+        });
+    }
+    calculateState(nextCalc) {
         this.setState({
-            calc: genPixelProps({
-                padding: this.props.padding,
-                width: this.props.width,
-                height: this.props.height,
-                lines: this.props.lines,
-                log: this.props.log
-            }),
+            calc: nextCalc || this.getPixelProps(),
             outerProperties: {
                 ...(this.props.outerProperties || {}),
                 onMouseMove: this.getOnMouseMove(),
@@ -88,7 +99,15 @@ export default class LineGraphInteractive extends PureComponent {
         this.calculateState();
     }
     componentDidUpdate(prevProps) {
-        if (!(prevProps.width === this.props.width &&
+        const nextCalc = this.getPixelProps();
+
+        if (!(this.state.calc &&
+            this.state.calc.minX === nextCalc.minX &&
+            this.state.calc.maxX === nextCalc.maxX &&
+            this.state.calc.minY === nextCalc.minY &&
+            this.state.calc.maxY === nextCalc.maxY &&
+
+            prevProps.width === this.props.width &&
             prevProps.height === this.props.height &&
             prevProps.log === this.props.log &&
             prevProps.padding[0] === this.props.padding[0] &&
@@ -96,7 +115,7 @@ export default class LineGraphInteractive extends PureComponent {
             prevProps.padding[2] === this.props.padding[2] &&
             prevProps.padding[3] === this.props.padding[3]
         )) {
-            this.calculateState();
+            this.calculateState(nextCalc);
         }
     }
     render() {
