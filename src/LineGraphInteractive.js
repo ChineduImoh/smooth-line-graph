@@ -23,17 +23,6 @@ export default class LineGraphInteractive extends PureComponent {
             calc: null
         };
     }
-    updatePixelProps() {
-        this.setState({
-            calc: genPixelProps({
-                padding: this.props.padding,
-                width: this.props.width,
-                height: this.props.height,
-                lines: this.props.lines,
-                log: this.props.log
-            })
-        });
-    }
     onHover(position, mvt) {
         if (!this.props.lines) {
             return;
@@ -79,26 +68,35 @@ export default class LineGraphInteractive extends PureComponent {
     getOnMouseLeave() {
         return () => () => this.onHover(null);
     }
-    getMouseEffects() {
-        return {
-            onMouseMove: this.getOnMouseMove(),
-            onMouseLeave: this.getOnMouseLeave()
-        };
-    }
-    updateMouseEffects() {
+    calculateState() {
         this.setState({
-            outerProperties: { ...(this.props.outerProperties || {}), ...this.getMouseEffects() }
+            calc: genPixelProps({
+                padding: this.props.padding,
+                width: this.props.width,
+                height: this.props.height,
+                lines: this.props.lines,
+                log: this.props.log
+            }),
+            outerProperties: {
+                ...(this.props.outerProperties || {}),
+                onMouseMove: this.getOnMouseMove(),
+                onMouseLeave: this.getOnMouseLeave()
+            }
         });
     }
     componentDidMount() {
-        this.updateMouseEffects();
-        this.updatePixelProps();
+        this.calculateState();
     }
-    componentWillUpdate(nextProps, nextState) {
-        if (!(this.state.width === nextState.width &&
-            this.state.height === nextState.height)) {
-
-            this.updateMouseEffects();
+    componentDidUpdate(prevProps) {
+        if (!(prevProps.width === this.props.width &&
+            prevProps.height === this.props.height &&
+            prevProps.log === this.props.log &&
+            prevProps.padding[0] === this.props.padding[0] &&
+            prevProps.padding[1] === this.props.padding[1] &&
+            prevProps.padding[2] === this.props.padding[2] &&
+            prevProps.padding[3] === this.props.padding[3]
+        )) {
+            this.calculateState();
         }
     }
     render() {
