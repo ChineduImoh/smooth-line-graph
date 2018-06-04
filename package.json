@@ -1,6 +1,6 @@
 {
   "name": "smooth-line-graph",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "React component to draw a smooth, SVG-based line graph",
   "main": "index.js",
   "scripts": {
