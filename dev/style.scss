@@ -59,16 +59,18 @@ body {
                 left: 50%;
                 top: 50%;
                 margin-left: -250px;
-                margin-top: -250px;
+                margin-top: -300px;
                 width: 500px;
-                height: 500px;
+                height: 600px;
                 box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
             }
 
             .graph {
                 position: relative;
 
-                .hover-title {
+                .graph-container {
+                    border-top: 1px dotted #ccc;
+                    border-bottom: 1px dotted #ccc;
                 }
             }
         }
