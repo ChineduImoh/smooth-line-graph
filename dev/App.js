@@ -12,55 +12,84 @@ import { LineGraphLog } from '../examples/log';
 
 import './style.scss';
 
-class GraphExample extends Component {
-    constructor(props) {
-        super(props);
+function GraphExample({ Graph, title, active, onToggleActive }) {
+    const titleShort = title.toLowerCase()
+        .replace(/\s+/g, '-');
 
-        this.state = { active: false };
-    }
-    render() {
-        const { Graph, title } = this.props;
+    const titleWithPrefix = `Graph example: ${title}`;
 
-        const titleShort = title.toLowerCase()
-            .replace(/\s+/g, '-');
+    const className = classNames('graph-example', `graph-example-${titleShort}`, { active });
 
-        const titleWithPrefix = `Graph example: ${title}`;
-
-        const className = classNames('graph-example', `graph-example-${titleShort}`, {
-            active: this.state.active
-        });
-
-        const onToggleActive = () => this.setState({ active: !this.state.active });
-
-        return (
-            <div className={className} onClick={onToggleActive}>
-                <div className="inner">
-                    <h2 className="title">{titleWithPrefix}</h2>
-                    <div className="graph">
-                        <Graph />
-                    </div>
+    return (
+        <div className={className} onClick={onToggleActive}>
+            <div className="inner">
+                <h2 className="title">{titleWithPrefix}</h2>
+                <div className="graph">
+                    <Graph />
                 </div>
             </div>
-        );
-    }
+        </div>
+    );
 }
 
 GraphExample.propTypes = {
+    active: PropTypes.bool,
+    onToggleActive: PropTypes.func.isRequired,
     Graph: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired
 };
 
-export default function App() {
-    return (
-        <div className="smooth-line-graph-examples">
-            <GraphExample Graph={LineGraphArrows} title="Arrows" />
-            <GraphExample Graph={LineGraphMulti} title="Multi" />
-            <GraphExample Graph={LineGraphRandomWalk} title="Random walk" />
-            <GraphExample Graph={LineGraphSmooth} title="Smooth" />
-            <GraphExample Graph={LineGraphStraight} title="Straight" />
-            <GraphExample Graph={LineGraphTime} title="Time series" />
-            <GraphExample Graph={LineGraphLog} title="Log scale" />
-        </div>
-    );
+export default class App extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = { active: '' };
+    }
+    render() {
+        const onActivate = evt => this.setState({ active: evt.target.value });
+        const onToggleActive = key => () => this.setState({
+            active: this.state.active === key
+                ? ''
+                : key
+        });
+
+        const keys = [
+            { key: 'Arrows', Graph: LineGraphArrows },
+            { key: 'Multi', Graph: LineGraphMulti },
+            { key: 'Random walk', Graph: LineGraphRandomWalk },
+            { key: 'Smooth', Graph: LineGraphSmooth },
+            { key: 'Straight', Graph: LineGraphStraight },
+            { key: 'Time series', Graph: LineGraphTime },
+            { key: 'Log scale', Graph: LineGraphLog }
+        ];
+
+        const activeOptions = keys.map(({ key }) => (
+            <option key={key} value={key}>{key}</option>
+        ));
+
+        const examples = keys.map(({ key, Graph }) => (
+            <GraphExample key={key}
+                title={key}
+                Graph={Graph}
+                active={this.state.active === key}
+                onToggleActive={onToggleActive(key)}
+            />
+        ));
+
+        return (
+            <div className="smooth-line-graph-examples">
+                <div className="meta">
+                    <span>{'Active: '}</span>
+                    <select onChange={onActivate} value={this.state.active}>
+                        <option value={''}>{'None'}</option>
+                        {activeOptions}
+                    </select>
+                </div>
+                <div className="examples">
+                    {examples}
+                </div>
+            </div>
+        );
+    }
 }
 

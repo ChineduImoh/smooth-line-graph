@@ -3,9 +3,18 @@ body {
 }
 
 .smooth-line-graph-examples {
-    display: flex;
-    flex-flow: row wrap;
     font: 1em sans-serif;
+    display: flex;
+    flex-flow: column;
+
+    .meta {
+        margin: 0.5em 1em;
+    }
+
+    .examples {
+        display: flex;
+        flex-flow: row wrap;
+    }
     
     .graph-example {
         display: flex;

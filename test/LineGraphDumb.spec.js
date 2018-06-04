@@ -1,19 +1,21 @@
 /* eslint-disable react/display-name, newline-per-chained-call */
 import { expect } from 'chai';
+import './browser';
 import Adapter from 'enzyme-adapter-react-16';
-import Enzyme, { shallow } from 'enzyme';
+import Enzyme, { mount } from 'enzyme';
 Enzyme.configure({ adapter: new Adapter() });
 import React from 'react';
-import LineGraph from '../src';
+import LineGraphDumb from '../src';
 import RenderedLine from '../src/RenderedLine';
 import Axes from '../src/Axes';
 
-describe('<LineGraph />', () => {
+describe('<LineGraphDumb />', () => {
     const lines = [
         {
             key: 'line1',
             data: [[0, 0], [1, 1], [2, 1], [3, 5]],
-            color: 'black'
+            color: 'black',
+            fill: true
         },
         {
             key: 'line2',
@@ -22,7 +24,7 @@ describe('<LineGraph />', () => {
                 ((xVal > 0) >> 0) + ((yVal > 0) >> 0) + index % 2
             ],
             strokeWidth: 3,
-            fill: true,
+            fill: false,
             smooth: true
         },
         {
@@ -63,48 +65,50 @@ describe('<LineGraph />', () => {
         svgClasses: 'baz bak'
     };
 
-    const wrapper = shallow(<LineGraph {...props} />);
+    const wrapper = mount(<LineGraphDumb {...props} />);
+
+    const graphContainer = wrapper.childAt(0).childAt(0);
 
     it('should render an outer <div />', () => {
-        expect(wrapper.is('div.graph-container.graph-somename')).to.equal(true);
-        expect(wrapper.props()).to.have.property('foo', 800);
-        expect(wrapper.children()).to.have.length(3);
+        expect(graphContainer.is('div.graph-container.graph-somename')).to.equal(true);
+        expect(graphContainer.props()).to.have.property('foo', 800);
+        expect(graphContainer.children()).to.have.length(3);
     });
 
     it('should render before and after graph components', () => {
-        expect(wrapper.childAt(0).is('span')).to.equal(true);
-        expect(wrapper.childAt(0).text()).to.equal('before graph');
+        expect(graphContainer.childAt(0).is('span')).to.equal(true);
+        expect(graphContainer.childAt(0).text()).to.equal('before graph');
 
-        expect(wrapper.childAt(2).is('span')).to.equal(true);
-        expect(wrapper.childAt(2).text()).to.equal('after graph');
+        expect(graphContainer.childAt(2).is('span')).to.equal(true);
+        expect(graphContainer.childAt(2).text()).to.equal('after graph');
     });
 
     it('should render an <svg />', () => {
-        expect(wrapper.childAt(1).is('svg')).to.equal(true);
-        expect(wrapper.childAt(1).props()).to.deep.include({
+        expect(graphContainer.childAt(1).is('svg')).to.equal(true);
+        expect(graphContainer.childAt(1).props()).to.deep.include({
             width: 500,
             height: 300,
             className: 'baz bak',
             bar: 200
         });
-        expect(wrapper.childAt(1).children()).to.have.length(6);
+        expect(graphContainer.childAt(1).children()).to.have.length(6);
     });
 
     it('should render before and after graph lines components', () => {
-        expect(wrapper.childAt(1).childAt(0).is('g')).to.equal(true);
-        expect(wrapper.childAt(1).childAt(0).text()).to.equal('before lines');
+        expect(graphContainer.childAt(1).childAt(0).is('g')).to.equal(true);
+        expect(graphContainer.childAt(1).childAt(0).text()).to.equal('before lines');
 
-        expect(wrapper.childAt(1).childAt(5).is('g')).to.equal(true);
-        expect(wrapper.childAt(1).childAt(5).text()).to.equal('after lines');
+        expect(graphContainer.childAt(1).childAt(5).is('g')).to.equal(true);
+        expect(graphContainer.childAt(1).childAt(5).text()).to.equal('after lines');
     });
 
     it('should render axes', () => {
-        expect(wrapper.childAt(1).childAt(1).is(Axes)).to.equal(true);
+        expect(graphContainer.childAt(1).childAt(1).is(Axes)).to.equal(true);
     });
 
     it('should render graph lines', () => {
-        expect(wrapper.childAt(1).childAt(2).is(RenderedLine)).to.equal(true);
-        expect(wrapper.childAt(1).childAt(2).props()).to.deep.include({
+        expect(graphContainer.childAt(1).childAt(2).is(RenderedLine)).to.equal(true);
+        expect(graphContainer.childAt(1).childAt(2).props()).to.deep.include({
             width: 500,
             height: 300,
             data: lines[0].data,
@@ -115,22 +119,22 @@ describe('<LineGraph />', () => {
             maxY: 10
         });
 
-        expect(wrapper.childAt(1).childAt(3).is(RenderedLine)).to.equal(true);
-        expect(wrapper.childAt(1).childAt(3).props()).to.deep.include({
+        expect(graphContainer.childAt(1).childAt(3).is(RenderedLine)).to.equal(true);
+        expect(graphContainer.childAt(1).childAt(3).props()).to.deep.include({
             width: 500,
             height: 300,
             data: lines[1].data,
             color: lines[1].color,
             smooth: true,
-            fill: true,
+            fill: false,
             minX: -10,
             maxX: 10,
             minY: -10,
             maxY: 10
         });
 
-        expect(wrapper.childAt(1).childAt(4).is(RenderedLine)).to.equal(true);
-        expect(wrapper.childAt(1).childAt(4).props()).to.deep.include({
+        expect(graphContainer.childAt(1).childAt(4).is(RenderedLine)).to.equal(true);
+        expect(graphContainer.childAt(1).childAt(4).props()).to.deep.include({
             width: 500,
             height: 300,
             data: lines[2].data,
