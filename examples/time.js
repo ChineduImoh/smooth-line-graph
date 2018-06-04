@@ -73,7 +73,7 @@ export function LineGraphTime() {
                 data: series,
                 smooth: true,
                 color: ([valX]) => {
-                    if (valX < 1527807600) {
+                    if (valX < 15000000) {
                         return '#06c';
                     }
 

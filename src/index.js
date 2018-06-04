@@ -5,8 +5,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { MIN_LOG_VALUE } from './constants';
 import RenderedLine from './RenderedLine';
-import Axes from './Axes.js';
+import Axes from './Axes';
 
 const coalesce = (arg1, arg2) => {
     if (arg1 || arg1 === 0) {
@@ -30,24 +31,21 @@ const genPixelProps = props => {
 
     const minX = coalesce(props.minX,
         pointReducer((last, [valX]) => Math.min(last, valX), Infinity));
+
     const maxX = coalesce(props.maxX,
         pointReducer((last, [valX]) => Math.max(last, valX), -Infinity));
 
     const minY = coalesce(props.minY,
         pointReducer((last, [, valY]) => Math.min(last, valY), Infinity));
-    let maxY = coalesce(props.maxY,
+    const maxY = coalesce(props.maxY,
         pointReducer((last, [, valY]) => Math.max(last, valY), -Infinity));
 
-    if (log) {
-        maxY = Math.E ** Math.ceil(Math.log(maxY));
-    }
-
-    const minYLog = Math.log(Math.max(0.1, minY));
-    const maxYLog = Math.log(Math.max(1, maxY));
+    const minYLog = Math.log(Math.E ** Math.floor(Math.log(Math.max(MIN_LOG_VALUE, minY))));
+    const maxYLog = Math.log(Math.E ** Math.ceil(Math.log(Math.max(1, maxY))));
 
     const withLog = handler => {
         if (log) {
-            return value => handler(Math.log(Math.max(0.1, value)), minYLog, maxYLog);
+            return value => handler(Math.log(Math.max(MIN_LOG_VALUE, value)), minYLog, maxYLog);
         }
 
         return value => handler(value, minY, maxY);
@@ -90,8 +88,10 @@ export default function LineGraph({
         afterLines
     } = props;
 
+    const padding = props.padding || [0, 0, 0, 0];
+
     const pixelProps = genPixelProps({
-        padding: [0, 0, 0, 0],
+        padding,
         width,
         height,
         lines,
@@ -102,6 +102,7 @@ export default function LineGraph({
         width,
         height,
         lines,
+        padding,
         ...pixelProps,
         ...props
     };
@@ -152,6 +153,7 @@ LineGraph.propTypes = {
     name: PropTypes.string.isRequired,
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
+    padding: PropTypes.array,
     log: PropTypes.bool,
     displayAxes: PropTypes.bool,
     lines: PropTypes.arrayOf(PropTypes.shape({
