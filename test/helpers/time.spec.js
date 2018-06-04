@@ -11,7 +11,8 @@ describe('Time functions', () => {
                 { label: '12:22', major: 1, time: 1497871320 },
                 { label: false, major: 0, time: 1497871350 },
                 { label: '12:23', major: 1, time: 1497871380 },
-                { label: false, major: 0, time: 1497871410 }
+                { label: false, major: 0, time: 1497871410 },
+                { label: '12:24', major: 1, time: 1497871440 }
             ];
 
             expect(result).to.deep.equal(expectedResult);
@@ -33,7 +34,8 @@ describe('Time functions', () => {
                 { label: false, major: 0, time: 1497871860 },
                 { label: false, major: 0, time: 1497871920 },
                 { label: false, major: 0, time: 1497871980 },
-                { label: false, major: 0, time: 1497872040 }
+                { label: false, major: 0, time: 1497872040 },
+                { label: false, major: 0, time: 1497872100 }
             ];
 
             expect(result).to.deep.equal(expectedResult);
@@ -70,7 +72,8 @@ describe('Time functions', () => {
                 { label: false, major: 0, time: 1497915000 },
                 { label: '01:00', major: 1, time: 1497916800 },
                 { label: false, major: 0, time: 1497918600 },
-                { label: '02:00', major: 1, time: 1497920400 }
+                { label: '02:00', major: 1, time: 1497920400 },
+                { label: false, major: 0, time: 1497922200 }
             ];
 
             expect(result).to.deep.equal(expectedResult);
@@ -105,7 +108,8 @@ describe('Time functions', () => {
                 { time: 1498118400, major: 0, label: '9' },
                 { time: 1498129200, major: 0, label: '12' },
                 { time: 1498140000, major: 0, label: '15' },
-                { time: 1498150800, major: 0, label: '18' }
+                { time: 1498150800, major: 0, label: '18' },
+                { time: 1498161600, major: 0, label: '21' }
             ];
 
             expect(result).to.deep.equal(expectedResult);
@@ -125,7 +129,8 @@ describe('Time functions', () => {
                 { time: 1498518000, major: 0, label: 'T' },
                 { time: 1498604400, major: 0, label: 'W' },
                 { time: 1498690800, major: 0, label: 'T' },
-                { time: 1498777200, major: 0, label: 'F' }
+                { time: 1498777200, major: 0, label: 'F' },
+                { time: 1498863600, major: 0, label: 'S' }
             ];
 
             expect(result).to.deep.equal(expectedResult);
@@ -143,7 +148,8 @@ describe('Time functions', () => {
                 { time: 1500850800, major: 0, label: '24 Jul' },
                 { time: 1501455600, major: 0, label: '31 Jul' },
                 { time: 1501542001, major: 2, label: 'Aug' },
-                { time: 1502060400, major: 0, label: '7 Aug' }
+                { time: 1502060400, major: 0, label: '7 Aug' },
+                { time: 1502665200, major: 0, label: '14 Aug' }
             ];
 
             expect(result).to.deep.equal(expectedResult);

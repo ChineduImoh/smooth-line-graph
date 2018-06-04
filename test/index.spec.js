@@ -4,8 +4,9 @@ import Adapter from 'enzyme-adapter-react-16';
 import Enzyme, { shallow } from 'enzyme';
 Enzyme.configure({ adapter: new Adapter() });
 import React from 'react';
-import LineGraph from '../src/LineGraph';
+import LineGraph from '../src';
 import RenderedLine from '../src/RenderedLine';
+import Axes from '../src/Axes';
 
 describe('<LineGraph />', () => {
     const lines = [
@@ -86,20 +87,24 @@ describe('<LineGraph />', () => {
             className: 'baz bak',
             bar: 200
         });
-        expect(wrapper.childAt(1).children()).to.have.length(5);
+        expect(wrapper.childAt(1).children()).to.have.length(6);
     });
 
     it('should render before and after graph lines components', () => {
         expect(wrapper.childAt(1).childAt(0).is('g')).to.equal(true);
         expect(wrapper.childAt(1).childAt(0).text()).to.equal('before lines');
 
-        expect(wrapper.childAt(1).childAt(4).is('g')).to.equal(true);
-        expect(wrapper.childAt(1).childAt(4).text()).to.equal('after lines');
+        expect(wrapper.childAt(1).childAt(5).is('g')).to.equal(true);
+        expect(wrapper.childAt(1).childAt(5).text()).to.equal('after lines');
+    });
+
+    it('should render axes', () => {
+        expect(wrapper.childAt(1).childAt(1).is(Axes)).to.equal(true);
     });
 
     it('should render graph lines', () => {
-        expect(wrapper.childAt(1).childAt(1).is(RenderedLine)).to.equal(true);
-        expect(wrapper.childAt(1).childAt(1).props()).to.deep.include({
+        expect(wrapper.childAt(1).childAt(2).is(RenderedLine)).to.equal(true);
+        expect(wrapper.childAt(1).childAt(2).props()).to.deep.include({
             width: 500,
             height: 300,
             data: lines[0].data,
@@ -110,8 +115,8 @@ describe('<LineGraph />', () => {
             maxY: 10
         });
 
-        expect(wrapper.childAt(1).childAt(2).is(RenderedLine)).to.equal(true);
-        expect(wrapper.childAt(1).childAt(2).props()).to.deep.include({
+        expect(wrapper.childAt(1).childAt(3).is(RenderedLine)).to.equal(true);
+        expect(wrapper.childAt(1).childAt(3).props()).to.deep.include({
             width: 500,
             height: 300,
             data: lines[1].data,
@@ -124,8 +129,8 @@ describe('<LineGraph />', () => {
             maxY: 10
         });
 
-        expect(wrapper.childAt(1).childAt(3).is(RenderedLine)).to.equal(true);
-        expect(wrapper.childAt(1).childAt(3).props()).to.deep.include({
+        expect(wrapper.childAt(1).childAt(4).is(RenderedLine)).to.equal(true);
+        expect(wrapper.childAt(1).childAt(4).props()).to.deep.include({
             width: 500,
             height: 300,
             data: lines[2].data,
