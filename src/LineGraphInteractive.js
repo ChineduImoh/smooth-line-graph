@@ -10,6 +10,10 @@ export default class LineGraphInteractive extends PureComponent {
         width: PropTypes.number.isRequired,
         height: PropTypes.number.isRequired,
         padding: PropTypes.array.isRequired,
+        minX: PropTypes.number,
+        maxX: PropTypes.number,
+        minY: PropTypes.number,
+        maxY: PropTypes.number,
         lines: PropTypes.array.isRequired,
         log: PropTypes.bool,
         outerProperties: PropTypes.object
@@ -22,17 +26,6 @@ export default class LineGraphInteractive extends PureComponent {
             outerProperties: this.props.outerProperties || {},
             calc: null
         };
-    }
-    updatePixelProps() {
-        this.setState({
-            calc: genPixelProps({
-                padding: this.props.padding,
-                width: this.props.width,
-                height: this.props.height,
-                lines: this.props.lines,
-                log: this.props.log
-            })
-        });
     }
     onHover(position, mvt) {
         if (!this.props.lines) {
@@ -79,26 +72,50 @@ export default class LineGraphInteractive extends PureComponent {
     getOnMouseLeave() {
         return () => () => this.onHover(null);
     }
-    getMouseEffects() {
-        return {
-            onMouseMove: this.getOnMouseMove(),
-            onMouseLeave: this.getOnMouseLeave()
-        };
+    getPixelProps() {
+        return genPixelProps({
+            padding: this.props.padding,
+            width: this.props.width,
+            height: this.props.height,
+            lines: this.props.lines,
+            log: this.props.log,
+            minY: this.props.minY,
+            maxY: this.props.maxY,
+            minX: this.props.minX,
+            maxX: this.props.maxX
+        });
     }
-    updateMouseEffects() {
+    calculateState(nextCalc) {
         this.setState({
-            outerProperties: { ...(this.props.outerProperties || {}), ...this.getMouseEffects() }
+            calc: nextCalc || this.getPixelProps(),
+            outerProperties: {
+                ...(this.props.outerProperties || {}),
+                onMouseMove: this.getOnMouseMove(),
+                onMouseLeave: this.getOnMouseLeave()
+            }
         });
     }
     componentDidMount() {
-        this.updateMouseEffects();
-        this.updatePixelProps();
+        this.calculateState();
     }
-    componentWillUpdate(nextProps, nextState) {
-        if (!(this.state.width === nextState.width &&
-            this.state.height === nextState.height)) {
+    componentDidUpdate(prevProps) {
+        const nextCalc = this.getPixelProps();
 
-            this.updateMouseEffects();
+        if (!(this.state.calc &&
+            this.state.calc.minX === nextCalc.minX &&
+            this.state.calc.maxX === nextCalc.maxX &&
+            this.state.calc.minY === nextCalc.minY &&
+            this.state.calc.maxY === nextCalc.maxY &&
+
+            prevProps.width === this.props.width &&
+            prevProps.height === this.props.height &&
+            prevProps.log === this.props.log &&
+            prevProps.padding[0] === this.props.padding[0] &&
+            prevProps.padding[1] === this.props.padding[1] &&
+            prevProps.padding[2] === this.props.padding[2] &&
+            prevProps.padding[3] === this.props.padding[3]
+        )) {
+            this.calculateState(nextCalc);
         }
     }
     render() {

@@ -23,6 +23,7 @@ export function LineGraphLog() {
         height: 500,
         padding: [40, 0, 40, 0],
         log: true,
+        minY: 0.001,
         lines: [
             {
                 key: 'logdata',
